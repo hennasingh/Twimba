@@ -11,14 +11,40 @@ tweetBtn.addEventListener('click', function() {
 document.addEventListener('click', function(event) {
     if(event.target.dataset.like){
         handleLikeClick(event.target.dataset.like)
+    } 
+    else if(event.target.dataset.retweet) {
+        handleRetweetClick(event.target.dataset.retweet)
     }
 })
+
+function handleRetweetClick(tweetId) {
+    const targetRetweetObj = tweetsData.filter(function(tweet) {
+        return tweet.uuid === tweetId
+    })[0]
+
+    if(!targetRetweetObj.isRetweeted){
+        targetRetweetObj.retweets++
+    } else {
+        targetRetweetObj.retweets--
+    }
+    targetRetweetObj.isRetweeted = !targetRetweetObj.isRetweeted
+    
+    render();
+
+}
 
 function handleLikeClick(tweetId) {
     const targetTweetObj = tweetsData.filter(function(tweet) {
                 return tweet.uuid === tweetId
     })[0] //this will return the first object and not an array form
-    targetTweetObj.likes++
+    
+    if(!targetTweetObj.isLiked){
+        targetTweetObj.likes++
+    } else {
+        targetTweetObj.likes--
+    }
+    targetTweetObj.isLiked = !targetTweetObj.isLiked
+    
     render();
 }
 
