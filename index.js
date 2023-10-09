@@ -1,12 +1,7 @@
 
 import { tweetsData } from "./data.js";
-const tweetInput = document.getElementById('tweet-input')
-const tweetBtn = document.getElementById('tweet-btn')
-const feedDiv = document.getElementById('feed')
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
-tweetBtn.addEventListener('click', function() {
-
-})
 
 document.addEventListener('click', function(event) {
     if(event.target.dataset.like){
@@ -14,6 +9,12 @@ document.addEventListener('click', function(event) {
     } 
     else if(event.target.dataset.retweet) {
         handleRetweetClick(event.target.dataset.retweet)
+    }
+    else if(event.target.dataset.reply) {
+        handleReplyClick(event.target.dataset.reply)
+    }
+    else if(event.target.id === 'tweet-btn') {
+        handleTweetBtnClick()
     }
 })
 
@@ -30,7 +31,6 @@ function handleRetweetClick(tweetId) {
     targetRetweetObj.isRetweeted = !targetRetweetObj.isRetweeted
     
     render();
-
 }
 
 function handleLikeClick(tweetId) {
@@ -46,6 +46,34 @@ function handleLikeClick(tweetId) {
     targetTweetObj.isLiked = !targetTweetObj.isLiked
     
     render();
+}
+
+function handleReplyClick(replyId) {
+
+    document.getElementById(`replies-${replyId}`).classList.toggle('hidden')
+}
+
+function handleTweetBtnClick() {
+    const tweetInput = document.getElementById('tweet-input')
+    if(tweetInput.value) {
+        let newTweet = 
+        {
+            handle: `@scrimba 💎`,
+            profilePic: `images/scrimbalogo.png`,
+            likes: 0,
+            retweets: 0,
+            tweetText: tweetInput.value,
+            replies: [],
+            isLiked: false,
+            isRetweeted: false,
+            uuid: uuidv4(),
+        }
+
+        tweetsData.unshift(newTweet)
+        tweetInput.value = ''
+        render()
+    }   
+
 }
 
 function getFeedHtml() {
@@ -111,7 +139,7 @@ function getFeedHtml() {
 }
 
 function render() {
-    feedDiv.innerHTML = getFeedHtml()
+    document.getElementById('feed').innerHTML = getFeedHtml()
 }
 
 render()
